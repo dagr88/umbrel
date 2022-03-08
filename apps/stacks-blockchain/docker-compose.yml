@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  web:
+    image: dagr88/stack-blockchain:v2.05.0.1.0
+    restart: on-failure
+    stop_grace_period: 1m
+    command: /bin/stacks-node start --config /src/stacks-node/Config.toml
+    ports:
+      - 20443:20443
+      - 20444:20444
+    environment:
