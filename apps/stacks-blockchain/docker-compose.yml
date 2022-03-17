@@ -2,13 +2,26 @@ version: "3.7"
 
 services:
   stacks:
-    image: blockstack/stacks-blockchain
+    image: "blockstack/stacks-blockchain:2.05.0.1.0-stretch"
     restart: on-failure
     stop_grace_period: 1m
-    command: /bin/stacks-node start --config /src/stacks-node/Config.toml
+    entrypoint: /app/stacks/bin/entrypoint.sh
+    environment:
+      BURNCHAIN_MODE: mainnet
+      BITCOIN_PEER_HOST: $BITCOIN_IP
+      BITCOIN_RPC_USERNAME: $BITCOIN_RPC_USER
+      BITCOIN_RPC_PASSWORD: $BITCOIN_RPC_PASS
+      BITCOIN_RPC_PORT: $BITCOIN_RPC_PORT
+      BITCOIN_RPC_PEER_PORT: $BITCOIN_P2P_PORT
+    # command: /bin/stacks-node start --config /src/stacks-node/Config.toml
     volumes:
       - "./stacks-blockchain/persistent-data/stacks-blockchain/mainnet:/root/stacks-node/data"
       - "./stacks-blockchain/config/mainnet:/src/stacks-node"
+      - "./stacks-blockchain/bin:/app/stacks/bin"
     ports:
       - 20443:20443
       - 20444:20444
+    networks:
+      default:
+        ipv4_address: 10.21.21.123
+
